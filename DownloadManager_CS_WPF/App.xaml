@@ -1,0 +1,17 @@
+﻿<Application x:Class="DownloadManager_CS_WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DownloadManager_CS_WPF"
+             xmlns:viewmodels="clr-namespace:DownloadManager_CS_WPF.ViewModels"
+             xmlns:valueconverters="clr-namespace:DownloadManager_CS_WPF.ValueConverters"
+             xmlns:usercontrols="clr-namespace:DownloadManager_CS_WPF.UserControls"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <viewmodels:MainWindowViewModel x:Key="MainWindowViewModel"/>
+        <viewmodels:DownloadFromInternetViewModel x:Key="DownloadFromInternetViewModel"/>
+        <valueconverters:ColumnWidthToElementWidthValueConverter x:Key="CloumnWidthToElementWidthValueConverter"/>
+        <valueconverters:ValueTypeToColorConverter x:Key="ValueTypeToColorConverter"/>
+        <valueconverters:DownloadButtonToPauseResumeButtonTitle x:Key="DownloadStateToPauseResumeButtonTitleConverter"/>
+        <valueconverters:DownloadsListToMainWindowTitleConverter x:Key="DownloadsListToMainWindowConverter"/>
+    </Application.Resources>
+</Application>

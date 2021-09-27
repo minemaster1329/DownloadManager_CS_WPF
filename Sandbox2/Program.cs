@@ -5,33 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
+using FluentFTP;
+using System.Net;
+
+using Newtonsoft.Json;
 
 namespace Sandbox2
 {
-    class Steganography
+    class MainObject
     {
-
+        public string Title { get; set; }
+        public string Message { get; set; }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            if (File.Exists("drzewa.png"))
-            {
-                const string message = "Siemanko, witam w mojej kuchni!";
-                string decrypted_message = "";
-                Bitmap bmp = new Bitmap("drzewa.png");
+            List<MainObject> mainObjects = new List<MainObject>();
 
-                Console.WriteLine($"Image dimensions: {bmp.Width} x {bmp.Height}");
-            }
+            for (int i = 0; i < 10; i++) mainObjects.Add(new MainObject() { Title = "My title", Message = "My Message" });
 
-            else
-            {
-                Console.WriteLine("File not found");
-            }
-
-            Console.ReadKey();
+            
         }
     }
 }

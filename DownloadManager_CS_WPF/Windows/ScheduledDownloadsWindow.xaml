@@ -1,0 +1,80 @@
+﻿<Window x:Class="DownloadManager_CS_WPF.Windows.ScheduledDownloadsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadManager_CS_WPF.Windows"
+        xmlns:sc_dl_cls="clr-namespace:DownloadManager_CS_WPF.ScheduledDownloadClasses"
+        mc:Ignorable="d"
+        Title="Scheduled downloads" Height="400" Width="400" DataContext="{StaticResource ScheduledDownloadsWindowViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <ListBox Margin="10" Grid.ColumnSpan="2" ItemsSource="{Binding ScheduledDownloads}" HorizontalContentAlignment="Stretch">
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type sc_dl_cls:ScheduledDownloadTestItem}">
+                    <Grid Height="50">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding DownloadSource}" Margin="5"/>
+                        <TextBlock Text="{Binding DownloadDestination}" Margin="5" Grid.Row="1"/>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding}"/>
+                                <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type sc_dl_cls:ScheduledDownloadFromFTP}">
+                    <Grid Height="50">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding DownloadServer}" Margin="5"/>
+                        <TextBlock Text="{Binding DownloadSource}" Margin="5" Grid.Column="1"/>
+                        <TextBlock Text="{Binding DownloadDestination}" Margin="5" Grid.Row="1"/>
+                        <TextBlock Text="{Binding DownloadDate}" Margin="5" Grid.Row="1" Grid.Column="1"/>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding}"/>
+                                <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type sc_dl_cls:ScheduledDownloadFromWeb}">
+                    <Grid Height="50">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding DownloadSource}" Margin="5"/>
+                        <TextBlock Text="{Binding DownloadDestination}" Margin="5" Grid.Row="1"/>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding}"/>
+                                <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListBox>
+        <Button Content="Schedule new WEB download" Grid.Row="1" Margin="10,10,10,10" Command="{Binding NewWebDownloadCommand}"/>
+        <Button Content="Schedule new FTP download" Grid.Row="1" Grid.Column="1" Margin="10,10,10,10" Command="{Binding NewFtpDownloadCommand}"/>
+    </Grid>
+</Window>

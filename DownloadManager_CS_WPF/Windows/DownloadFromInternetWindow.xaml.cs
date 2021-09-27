@@ -8,12 +8,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DownloadManager_CS_WPF.ViewModels;
-using DownloadManager_CS_WPF.DownloadClasses;
 using System.Threading.Tasks;
 using System.IO;
-using Microsoft.Win32;
 using System.Linq;
+
+using Microsoft.Win32;
+
+using DownloadManager_CS_WPF.DebugInfoClasses;
+using DownloadManager_CS_WPF.ViewModels;
+using DownloadManager_CS_WPF.DownloadClasses;
+using DownloadManager_CS_WPF.DownloadClasses.DownloadReportsClasses;
 
 namespace DownloadManager_CS_WPF.Windows
 {
@@ -28,6 +32,8 @@ namespace DownloadManager_CS_WPF.Windows
         DownloadFromInternetWindow()
         {
             InitializeComponent();
+            _mainWindowViewModel = null;
+            _rnd = null;
         }
 
         public DownloadFromInternetWindow(MainWindowViewModel mainWindowViewModel)
@@ -43,7 +49,7 @@ namespace DownloadManager_CS_WPF.Windows
 
             if (await DownloadFromInternet.ValidateDownload(link))
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                SaveFileDialog saveFileDialog = new();
                 string file_name = link.Split('/').Last();
                 string extension = link.Split('.').Last();
                 saveFileDialog.AddExtension = true;
@@ -55,9 +61,19 @@ namespace DownloadManager_CS_WPF.Windows
 
                 if (dial_res == true && saveFileDialog.FileName != "")
                 {
-                    DownloadFromInternet dl = new DownloadFromInternet(_rnd.Next(), link, saveFileDialog.FileName);
+                    int d_id = 0;
+                    while (AppSingleton.Instance.DownloadReport.ContainsKey(d_id)) d_id = AppSingleton.Instance.RandomGenerator.Next(); 
+                    AppSingleton.Instance.AddNewDownloadReport(d_id, new DownloadFromWebReportItem()
+                    {
+                        DownloadDate = DateTime.Now,
+                        DownloadDestination = saveFileDialog.FileName,
+                        DownloadSource=link,
+                        DownloadState=DownloadState.DownloadPending
+                    });
+                    DownloadFromInternet dl = new(d_id, link, saveFileDialog.FileName);
                     _mainWindowViewModel.DownloadsList.Add(dl);
                     dl.Download();
+                    AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo("Download started", $"From {dl.DownloadSource}"));
                 }
             }
             else

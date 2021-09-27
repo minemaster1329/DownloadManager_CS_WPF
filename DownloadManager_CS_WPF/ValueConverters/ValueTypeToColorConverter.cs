@@ -6,6 +6,8 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Diagnostics;
 
+using DownloadManager_CS_WPF.DebugInfoClasses;
+
 namespace DownloadManager_CS_WPF.ValueConverters
 {
     class ValueTypeToColorConverter : IValueConverter
@@ -14,12 +16,14 @@ namespace DownloadManager_CS_WPF.ValueConverters
         {
             if (value != null)
             {
-                IDebugInfo debugInfo = (IDebugInfo)value;
-                if (debugInfo is DebugInfo) return Brushes.Black;
-                else if (debugInfo is DebugWarning) return Brushes.YellowGreen;
-                else if (debugInfo is DebugError) return Brushes.Red;
-                else if (debugInfo is DebugDownloadCompletedSuccesfully) return Brushes.Green;
-                else return Brushes.Black;
+                return value switch
+                {
+                    DebugInfo _ => Brushes.Black,
+                    DebugWarning _ => Brushes.YellowGreen,
+                    DebugError _ => Brushes.Red,
+                    DebugDownloadCompletedSuccesfully _ => Brushes.Green,
+                    _ => throw new ArgumentException("Invalid input exception"),
+                };
             }
             return Brushes.Black;
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DownloadManager_CS_WPF"
         mc:Ignorable="d"
-        Title="Download manager: C# WPF" Height="450" Width="800" DataContext="{StaticResource MainWindowViewModel}" Name="WindowMain">
+        Title="Download manager: C# WPF" MinHeight="450" MinWidth="700" DataContext="{StaticResource MainWindowViewModel}" Name="WindowMain">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -16,62 +16,36 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu Grid.ColumnSpan="3">
             <MenuItem Header="Options">
                 <MenuItem Header="Download">
-                    <MenuItem Header="From FTP"/>
+                    <MenuItem Header="From FTP" Command="{Binding DownloadFromFTPRelayCommand}"/>
                     <MenuItem Header="From Internet">
-                        <MenuItem Header="New"/>
+                        <MenuItem Header="New"  Command="{Binding DownloadFromWebRelayCommand}"/>
                         <MenuItem Header="Last Used Links"/>
                     </MenuItem>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Scheduled Downloads">
+                <MenuItem Header="Show scheduled downloads" Command="{Binding ShowScheduledDownloadsCommand}"/>
+                <MenuItem Header="Schedule download">
+                    <MenuItem Header="From FTP" Command="{Binding ScheduleNewFtpDownloadCommand}"/>
+                    <MenuItem Header="From Web" Command="{Binding ScheduleNewWebDownloadCommand}"/>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="Export">
                 <MenuItem Header="Log report"/>
-                <MenuItem Header="Download history"/>
+                <MenuItem Header="Download history" Command="{Binding ShowDownloadsHistoryCommand}"/>
             </MenuItem>
             <MenuItem Header="About"/>
         </Menu>
         <Button Content="Download From Internet" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=DownloadFromWebRelayCommand}" CommandParameter="{Binding DownloadsList}"/>
         <Button Content="Download From FTP" Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=DownloadFromFTPRelayCommand}" CommandParameter="{Binding DownloadsList}"/>
-        <Button Content="Clear" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=ClearDownloadListRelayCommand}" CommandParameter="{Binding Logs}"/>
-        <ListView Grid.Row="2" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding DownloadsList, Mode=OneWay}" Name="DownloadsList">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding DownloadID}"/>
-                    <GridViewColumn Header="Download Source" Width="200" DisplayMemberBinding="{Binding DownloadSource}"/>
-                    <GridViewColumn Header="Download Progress" Width="200" x:Name="DownloadProgressColumn">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <ProgressBar Maximum="100" Minimum="0" Value="{Binding Progress}" Height="20" Width="{Binding ElementName=DownloadProgressColumn, Path=Width, Converter={StaticResource CloumnWidthToElementWidthValueConverter}}"/>
-                                    <TextBlock Text="{Binding Progress, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Grid>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Options" Width="270" x:Name="OptionsColumn">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid Width="{Binding ElementName=OptionsColumn, Path=Width, Converter={StaticResource CloumnWidthToElementWidthValueConverter}}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Command="{Binding ElementName=DownloadsList, Path=DataContext.PauseDownloadRelayCommand}" CommandParameter="{Binding}" Content="{Binding State, Converter={StaticResource DownloadStateToPauseResumeButtonTitleConverter}}" Height="20" Margin="0,0,2,0" IsEnabled="{Binding Pausable}"/>
-                                    <Button Command="{Binding ElementName=DownloadsList, Path=DataContext.CancelDownloadRelayCommand}" CommandParameter="{Binding}" Content="Cancel" Height="20" Grid.Column="1" Margin="2,0,0,0"/>
-                                </Grid>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListBox Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding Logs, Mode=OneWay}">
+        <Button Content="Clear" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=ClearDownloadListRelayCommand}" CommandParameter="{Binding LogsNotHidden}"/>
+        <ListBox Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding LogsCollectionView}" IsSynchronizedWithCurrentItem="True" Name="DownloadsListNew">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}" Foreground="{Binding Converter={StaticResource ValueTypeToColorConverter}}"/>
@@ -79,6 +53,36 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <Label Content="Application Log Output" Grid.Row="3" Margin="10,0"/>
-        <Button Content="Clear Console" Grid.Column="1" Margin="10,0" Grid.Row="3" Command="{Binding ClearLogsListRelayCommand}"/>
+        <Button Content="Clear Console" Grid.Column="1" Margin="10" Grid.Row="3" Command="{Binding ClearLogsListRelayCommand}" Grid.ColumnSpan="2"/>
+        <ListBox Grid.Row="2" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding DownloadsList, Mode=OneWay}" HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" Height="50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding DownloadID}" Grid.RowSpan="3" TextAlignment="Center" Padding="14" Margin="0"/>
+                        <TextBlock Grid.Column="1" Text="From:" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                        <TextBlock Grid.Column="1" Text="To:" TextWrapping="Wrap" Margin="5,0,0,0" Grid.Row="1"/>
+                        <TextBlock Grid.Column="2" Margin="0,-1,0,0" Text="{Binding DownloadSource, Mode=OneWay}" TextWrapping="NoWrap"/>
+                        <TextBlock Grid.Column="2" Margin="0,0,0,-1" Text="{Binding DownloadDestination, Mode=OneWay}" TextWrapping="NoWrap" Grid.Row="1"/>
+                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToPauseResumeButtonTitleConverter}}" Grid.Column="4" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=DownloadsListNew, Path=DataContext.PauseDownloadRelayCommand}" CommandParameter="{Binding}"/>
+                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToCancelButtonTitleConverter}}" Grid.Column="5" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=DownloadsListNew, Path=DataContext.CancelDownloadRelayCommand}" CommandParameter="{Binding}"/>
+                        <ProgressBar Grid.Column="2" Margin="5,5,5,5" Grid.Row="2" Minimum="0" Maximum="100" Value="{Binding Progress, Mode=OneWay}"/>
+                        <TextBlock Grid.Column="3" Margin="5,0" Text="{Binding Progress, StringFormat={}{0:0}%}" TextWrapping="Wrap"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>

@@ -20,7 +20,7 @@ namespace DownloadManager_CS_WPF.CustomDynamicList
             {
                 if (elements_count == 0)
                 {
-                    return default(T);
+                    return default;
                 }
                 else if (index < 0 || index >= elements_count) throw new IndexOutOfRangeException();
                 else
@@ -69,8 +69,8 @@ namespace DownloadManager_CS_WPF.CustomDynamicList
                 copy.NextElement = new CustomDynamicListElement(item);
             }
 
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new List<T>() { item }, Count));
             ++elements_count;
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void Clear()

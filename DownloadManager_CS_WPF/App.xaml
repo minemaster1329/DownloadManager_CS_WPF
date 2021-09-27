@@ -8,8 +8,10 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <viewmodels:MainWindowViewModel x:Key="MainWindowViewModel"/>
-        <viewmodels:DownloadFromInternetViewModel x:Key="DownloadFromInternetViewModel"/>
-        <valueconverters:ColumnWidthToElementWidthValueConverter x:Key="CloumnWidthToElementWidthValueConverter"/>
+        <viewmodels:DownloadFromFTPWindowViewModel x:Key="DownloadFromFTPWindowViewModel"/>
+        <viewmodels:ScheduledDownloadsWindowViewModel x:Key="ScheduledDownloadsWindowViewModel"/>
+
+        <valueconverters:DownloadStateToTitleConverter_CancelBtn x:Key="DownloadStateToCancelButtonTitleConverter"/>
         <valueconverters:ValueTypeToColorConverter x:Key="ValueTypeToColorConverter"/>
         <valueconverters:DownloadButtonToPauseResumeButtonTitle x:Key="DownloadStateToPauseResumeButtonTitleConverter"/>
         <valueconverters:DownloadsListToMainWindowTitleConverter x:Key="DownloadsListToMainWindowConverter"/>

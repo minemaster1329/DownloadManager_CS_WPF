@@ -29,7 +29,7 @@ namespace DownloadManager_CS_WPF.DownloadClasses
         public bool Pausable
         {
             get => _pausable && ((State == DownloadState.DownloadStarted) || (State == DownloadState.DownloadPaused));
-            set
+            protected set
             {
                 _pausable = value;
                 OnPropertyChanged();
@@ -38,7 +38,7 @@ namespace DownloadManager_CS_WPF.DownloadClasses
         public int DownloadID
         {
             get => _downloadID;
-            set
+            protected set
             {
                 _downloadID = value;
                 OnPropertyChanged();
@@ -47,11 +47,12 @@ namespace DownloadManager_CS_WPF.DownloadClasses
         public DownloadState State
         {
             get => _downloadState;
-            set
+            protected set
             {
                 _downloadState = value;
+                AppSingleton.Instance.DownloadReport[_downloadID].DownloadState = value;
                 OnPropertyChanged();
-                OnPropertyChanged("Pausable");
+                OnPropertyChanged(nameof(Pausable));
             }
         }
 

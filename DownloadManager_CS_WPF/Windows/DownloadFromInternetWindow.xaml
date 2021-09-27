@@ -17,7 +17,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Label Content="Enter download link" Margin="10,10,10,10" Grid.ColumnSpan="2"/>
-        <TextBox Margin="10,10,10,10" Grid.Row="1" Text="" TextWrapping="Wrap" Grid.ColumnSpan="2" Name="LinkInput" MaxLines="1"/>
+        <TextBox Margin="10,10,10,10" Grid.Row="1" Text="" TextWrapping="NoWrap" Grid.ColumnSpan="2" Name="LinkInput" MaxLines="1"/>
         <Button Content="Download" Grid.Row="2" Margin="10,10,10,10" Name="DownloadButton" Click="DownloadButton_Click"/>
         <Button Content="Cancel" Grid.Row="2" Margin="10,10,10,10" Grid.Column="1" Name="CancelButton" Click="CancelButton_Click"/>
     </Grid>

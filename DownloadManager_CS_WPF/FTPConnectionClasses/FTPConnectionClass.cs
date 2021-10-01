@@ -27,9 +27,19 @@ namespace DownloadManager_CS_WPF.FTPConnectionClasses
         {
             _ftpClient = new();
             _ftpClient.Host = credentials.Host;
-            _ftpClient.Credentials = new NetworkCredential(credentials.UserName, credentials.Password);
-            _ftpClient.Connect();
-            _credentials = credentials;
+            if (credentials.AnonymousAccess)
+            {
+                _ftpClient.Credentials = new NetworkCredential("anonymous", "janeDoe@contonso.com");
+                _ftpClient.Connect();
+                _credentials = credentials;
+            }
+
+            else
+            {
+                _ftpClient.Credentials = new NetworkCredential(credentials.UserName, credentials.Password);
+                _ftpClient.Connect();
+                _credentials = credentials;
+            }
         }
 
         public static bool FTPCredentialsCorrect(ref CredentialsSet credentialsSet, out FTPConnectionClass ftp_client, out Exception exceptionType)

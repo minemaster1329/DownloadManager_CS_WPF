@@ -35,7 +35,7 @@ namespace DownloadManager_CS_WPF.Windows
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            CredentialsSet credentials = new(ServerNameInput.Text, UserNameInput.Text, PasswordInput.SecurePassword);
+            CredentialsSet credentials = new(AnonymousAccessCheckBox.IsChecked.Value,ServerNameInput.Text, UserNameInput.Text, PasswordInput.SecurePassword);
 
             if (FTPConnectionClass.FTPCredentialsCorrect(ref credentials, out _ftpConnectionClass, out Exception ex_type))
             {

@@ -9,15 +9,21 @@ namespace DownloadManager_CS_WPF.ViewModels
 {
     class FTPCredentialsFormViewModel : PropertyChangedHandlerClass
     {
-        private bool _notAnonymousAccess = true;
-        public bool NotAnonymousAccess
+        private bool _anonymousAccess = true;
+        public bool AnonymousAccess
         {
-            get => _notAnonymousAccess;
+            get => _anonymousAccess;
             set
             {
-                _notAnonymousAccess = value;
+                _anonymousAccess = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CredentialsControlsEnabled));
             }
+        }
+
+        public bool CredentialsControlsEnabled
+        {
+            get => !_anonymousAccess;
         }
 
         public FTPCredentialsFormViewModel() { }

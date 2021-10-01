@@ -49,8 +49,13 @@ namespace DownloadManager_CS_WPF.ViewModels
                 if (CurrentConnection != null)
                 {
                     IList<FtpListItem> str = new List<FtpListItem>();
-
-                    str = CurrentConnection.GetCopy().Client.GetListing("", FtpListOption.Recursive).Where(l => l.Type == FtpFileSystemObjectType.File).ToList();
+                    Debug.WriteLine("Fetching items list");
+                    //str = CurrentConnection.GetCopy().Client.GetListing("", FtpListOption.AllFiles).Where(l => l.Type == FtpFileSystemObjectType.File).ToList();
+                    str = CurrentConnection.GetCopy().Client.GetListing("", FtpListOption.AllFiles).ToList();
+                    foreach (FtpListItem item in str)
+                    {
+                        Debug.WriteLine(item.FullName);
+                    }
                     if (SearchString.Length > 0)
                     {
                         str = str.Where(st => st.Name.Contains(SearchString)).ToList();

@@ -8,8 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace DownloadManager_CS_WPF.FTPConnectionClasses
 {
-    public record CredentialsSet(string Host, string UserName, SecureString Password)
+    public record CredentialsSet(bool AnonymousAccess, string Host, string UserName, SecureString Password)
     {
+        public bool AnonymousAccess { get; init; } = AnonymousAccess;
         public string Host { get; init; } = Host;
         public string UserName { get; init; } = UserName;
         public SecureString Password { get; init; } = Password;

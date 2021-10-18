@@ -13,9 +13,7 @@ using System.Windows.Data;
 using System.Threading.Tasks;
 using System.Threading;
 
-using DownloadManager_CS_WPF.CustomDynamicList;
 using DownloadManager_CS_WPF.DownloadClasses;
-using DownloadManager_CS_WPF.DebugInfoClasses;
 using DownloadManager_CS_WPF.Windows;
 
 namespace DownloadManager_CS_WPF.ViewModels
@@ -52,13 +50,6 @@ namespace DownloadManager_CS_WPF.ViewModels
             _scheduleNewFtpDownloadCommand = new RelaySyncCommand(ScheduleNewFTPdownloadCommandExecute);
             _scheduleNewWebDownloadCommand = new RelaySyncCommand(ScheduleNewWebDownloadCommandExecute);
             _showDownloadsHistory = new RelaySyncCommand(ShowDownloadsHistoryCommandExecute);
-
-            AppSingleton.Instance.Logs.CollectionChanged += Logs_CollectionChanged;
-        }
-
-        private void Logs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(LogsCollectionView));
         }
 
         public ObservableCollection<DownloadAbstract> DownloadsList
@@ -67,19 +58,9 @@ namespace DownloadManager_CS_WPF.ViewModels
         }
 
         #region Main Window ViewModel Fields (w/o relay commands)
-        public ICollectionView LogsCollectionView
+        public ObservableCollection<string> AppLogs
         {
-            get
-            {
-                ICollectionView _logsCollectionView = CollectionViewSource.GetDefaultView(AppSingleton.Instance.Logs);
-                _logsCollectionView.Filter = LogsFilter;
-
-                return _logsCollectionView;
-            }
-        }
-        public CustomDynamicLinkedList<DebugInfoAbstract> LogsNotHidden
-        {
-            get => AppSingleton.Instance.Logs;
+            get => CustomLoggerSingleton.Instance.Logs;
         }
         #endregion
         #region RelayCommandsForButtons
@@ -147,16 +128,5 @@ namespace DownloadManager_CS_WPF.ViewModels
         #region AsyncCommands
         #endregion
         #endregion
-
-        private bool LogsFilter(object item)
-        {
-            if (item is null)
-            {
-                return false;
-            }
-            DebugInfoAbstract debugInfoAbstract = item as DebugInfoAbstract;
-            Debug.WriteLine(debugInfoAbstract.Hidden);
-            return (!debugInfoAbstract.Hidden);
-        }
     }
 }

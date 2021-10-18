@@ -11,9 +11,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 
-using DownloadManager_CS_WPF.CustomDynamicList;
 using DownloadManager_CS_WPF.DownloadClasses;
-using DownloadManager_CS_WPF.DebugInfoClasses;
 using DownloadManager_CS_WPF.Windows;
 
 namespace DownloadManager_CS_WPF.ViewModels
@@ -63,11 +61,12 @@ namespace DownloadManager_CS_WPF.ViewModels
 
         void ClearLogsListButtonCommandExecute(object parameter)
         {
-            foreach (DebugInfoAbstract debugInfo in AppSingleton.Instance.Logs)
-            {
-                debugInfo.Hidden = true;
-            }
-            OnPropertyChanged(nameof(LogsCollectionView));
+            //foreach (DebugInfoAbstract debugInfo in AppSingleton.Instance.Logs)
+            //{
+            //    debugInfo.Hidden = true;
+            //}
+            //OnPropertyChanged(nameof(LogsCollectionView));
+            CustomLoggerSingleton.Instance.AddNewLog("XD", "XD", LogType.Error);
         }
 
         void ShowScheduledDownloadsMenuItemCommandExecute(object parameter)

@@ -14,7 +14,6 @@ using System.Linq;
 
 using Microsoft.Win32;
 
-using DownloadManager_CS_WPF.DebugInfoClasses;
 using DownloadManager_CS_WPF.ViewModels;
 using DownloadManager_CS_WPF.DownloadClasses;
 using DownloadManager_CS_WPF.DownloadClasses.DownloadReportsClasses;
@@ -73,7 +72,8 @@ namespace DownloadManager_CS_WPF.Windows
                     DownloadFromInternet dl = new(d_id, link, saveFileDialog.FileName);
                     _mainWindowViewModel.DownloadsList.Add(dl);
                     dl.Download();
-                    AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo("Download started", $"From {dl.DownloadSource}"));
+                    //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo("Download started", $"From {dl.DownloadSource}"));
+                    CustomLoggerSingleton.Instance.AddNewLog("Download from Internet", $"Starting download from {dl.DownloadSource}", LogType.Info);
                 }
             }
             else

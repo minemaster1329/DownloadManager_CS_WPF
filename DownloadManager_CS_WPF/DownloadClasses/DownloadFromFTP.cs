@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.Threading;
 
 using FluentFTP;
-
-using DownloadManager_CS_WPF.DebugInfoClasses;
 using DownloadManager_CS_WPF.FTPConnectionClasses;
 
 namespace DownloadManager_CS_WPF.DownloadClasses
@@ -38,17 +36,20 @@ namespace DownloadManager_CS_WPF.DownloadClasses
                 Debug.WriteLine("Starting download");
                 bool downloadedSuccessfully = await _ftpClient.Client.DownloadAsync(fs, _ftpListItem.FullName, 0, progress_fun, _cancellationTokenSource.Token);
                 State = DownloadState.DownloadCompleted;
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugDownloadCompletedSuccesfully($"Downloading from FTP completed", DownloadSource));
+                CustomLoggerSingleton.Instance.AddNewLog("FTP Download", $"Downloading from {DownloadSource} completed", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugDownloadCompletedSuccesfully($"Downloading from FTP completed", DownloadSource));
             }
             catch (TaskCanceledException)
             {
                 State = DownloadState.DownloadCancelled;
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugWarning($"Download cancelled", $"{_ftpClient.Client.Host}/{_ftpListItem.FullName}"));
+                CustomLoggerSingleton.Instance.AddNewLog("FTP Download", $"Download from {DownloadSource} has been cancelled by user.", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugWarning($"Download cancelled", $"{_ftpClient.Client.Host}/{_ftpListItem.FullName}"));
             }
             catch (Exception e)
             {
                 State = DownloadState.DownloadError;
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError($"Error when downloading from FTP {DownloadSource}", e.Message));
+                CustomLoggerSingleton.Instance.AddNewLog($"Error when downloading from {DownloadSource}", e.Message, LogType.Error);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError($"Error when downloading from FTP {DownloadSource}", e.Message));
             }
         } 
 

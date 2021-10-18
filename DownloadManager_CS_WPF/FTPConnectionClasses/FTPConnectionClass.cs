@@ -9,8 +9,6 @@ using System.Security;
 
 using FluentFTP;
 
-using DownloadManager_CS_WPF.DebugInfoClasses;
-
 namespace DownloadManager_CS_WPF.FTPConnectionClasses
 {
     public class FTPConnectionClass
@@ -56,13 +54,16 @@ namespace DownloadManager_CS_WPF.FTPConnectionClasses
                 switch (e)
                 {
                     case TimeoutException _:
-                        AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", $"Connection timeout"));
+                        //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", $"Connection timeout"));
+                        CustomLoggerSingleton.Instance.AddNewLog("Connecting to FTP server", $"Timeout when trying to connect to {credentialsSet.Host}", LogType.Error);
                         break;
                     case FtpAuthenticationException _:
-                        AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", "invalid credentials"));
+                        //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", "invalid credentials"));
+                        CustomLoggerSingleton.Instance.AddNewLog("Connecting to FTP server", $"Invalid credentials for server {credentialsSet.Host}", LogType.Error);
                         break;
                     default:
-                        AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", e.Message));
+                        //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when creating connection to FTP server", e.Message));
+                        CustomLoggerSingleton.Instance.AddNewLog("Connecting to FTP server", $"Error when connecting to {credentialsSet.Host}: {e.Message}", LogType.Error);
                         break;
                 }
             }

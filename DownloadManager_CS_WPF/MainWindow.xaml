@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DownloadManager_CS_WPF"
+        xmlns:viewmodels="clr-namespace:DownloadManager_CS_WPF.ViewModels"
         mc:Ignorable="d"
-        Title="Download manager: C# WPF" MinHeight="450" MinWidth="700" DataContext="{StaticResource MainWindowViewModel}" Name="WindowMain">
+        Title="Download manager: C# WPF" MinHeight="450" MinWidth="700"
+        DataContext="{StaticResource MainWindowViewModel}"
+        Name="WindowMain">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -44,14 +47,8 @@
         </Menu>
         <Button Content="Download From Internet" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=DownloadFromWebRelayCommand}" CommandParameter="{Binding DownloadsList}"/>
         <Button Content="Download From FTP" Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=DownloadFromFTPRelayCommand}" CommandParameter="{Binding DownloadsList}"/>
-        <Button Content="Clear" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" Command="{Binding Path=ClearDownloadListRelayCommand}" CommandParameter="{Binding LogsNotHidden}"/>
-        <ListBox Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding LogsCollectionView}" IsSynchronizedWithCurrentItem="True" Name="DownloadsListNew">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" Foreground="{Binding Converter={StaticResource ValueTypeToColorConverter}}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Button Content="Clear" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10"/>
+        <ListBox Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding AppLogs}"/>
         <Label Content="Application Log Output" Grid.Row="3" Margin="10,0"/>
         <Button Content="Clear Console" Grid.Column="1" Margin="10" Grid.Row="3" Command="{Binding ClearLogsListRelayCommand}" Grid.ColumnSpan="2"/>
         <ListBox Grid.Row="2" Grid.ColumnSpan="3" Margin="10,10,10,10" ItemsSource="{Binding DownloadsList, Mode=OneWay}" HorizontalContentAlignment="Stretch">
@@ -76,8 +73,8 @@
                         <TextBlock Grid.Column="1" Text="To:" TextWrapping="Wrap" Margin="5,0,0,0" Grid.Row="1"/>
                         <TextBlock Grid.Column="2" Margin="0,-1,0,0" Text="{Binding DownloadSource, Mode=OneWay}" TextWrapping="NoWrap"/>
                         <TextBlock Grid.Column="2" Margin="0,0,0,-1" Text="{Binding DownloadDestination, Mode=OneWay}" TextWrapping="NoWrap" Grid.Row="1"/>
-                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToPauseResumeButtonTitleConverter}}" Grid.Column="4" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=DownloadsListNew, Path=DataContext.PauseDownloadRelayCommand}" CommandParameter="{Binding}"/>
-                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToCancelButtonTitleConverter}}" Grid.Column="5" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=DownloadsListNew, Path=DataContext.CancelDownloadRelayCommand}" CommandParameter="{Binding}"/>
+                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToPauseResumeButtonTitleConverter}}" Grid.Column="4" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=WindowMain, Path=DataContext.PauseDownloadRelayCommand}" CommandParameter="{Binding}"/>
+                        <Button Content="{Binding State, Converter={StaticResource DownloadStateToCancelButtonTitleConverter}}" Grid.Column="5" Grid.RowSpan="2" Margin="5,5,5,5" Command="{Binding ElementName=WindowMain, Path=DataContext.CancelDownloadRelayCommand}" CommandParameter="{Binding}"/>
                         <ProgressBar Grid.Column="2" Margin="5,5,5,5" Grid.Row="2" Minimum="0" Maximum="100" Value="{Binding Progress, Mode=OneWay}"/>
                         <TextBlock Grid.Column="3" Margin="5,0" Text="{Binding Progress, StringFormat={}{0:0}%}" TextWrapping="Wrap"/>
                     </Grid>

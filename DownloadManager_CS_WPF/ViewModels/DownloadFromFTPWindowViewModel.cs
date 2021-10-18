@@ -11,7 +11,6 @@ using Microsoft.Win32;
 using DownloadManager_CS_WPF.Windows;
 using DownloadManager_CS_WPF.FTPConnectionClasses;
 using DownloadManager_CS_WPF.DownloadClasses;
-using DownloadManager_CS_WPF.DebugInfoClasses;
 using DownloadManager_CS_WPF.DownloadClasses.DownloadReportsClasses;
 
 using FluentFTP;
@@ -126,6 +125,7 @@ namespace DownloadManager_CS_WPF.ViewModels
                 FTPConnectionClass fTPConnectionClass = fTPCredentialsForm.GetFTPConnectionClass();
                 if (!ConnectionsList.Any(x=>String.Compare(x.Client.Host, fTPConnectionClass.Client.Host)==0)) {
                     ConnectionsList.Add(fTPConnectionClass);
+                    CustomLoggerSingleton.Instance.AddNewLog("Connecting to FTP server", $"Successfully connected to {fTPConnectionClass.Client.Host}", LogType.Info);
                 }
             }
         }
@@ -167,7 +167,8 @@ namespace DownloadManager_CS_WPF.ViewModels
                     DownloadFromFTP downloadFromFTP = new(CurrentConnection.GetCopy(), saveFileDialog.FileName, ftpListItem, d_id);
                     AppSingleton.Instance.DownloadsList.Add(downloadFromFTP);
                     downloadFromFTP.Download();
-                    AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo("Downloading from FTP", ftpListItem.FullName));
+                    //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo("Downloading from FTP", ftpListItem.FullName));
+                    CustomLoggerSingleton.Instance.AddNewLog("Download from FTP", $"downloading from {ftpListItem.FullName}", LogType.Info);
                 }
             }
         }

@@ -7,12 +7,11 @@
              xmlns:usercontrols="clr-namespace:DownloadManager_CS_WPF.UserControls"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <viewmodels:MainWindowViewModel x:Key="MainWindowViewModel"/>
+        <viewmodels:MainWindowViewModel  x:Key="MainWindowViewModel"/>
         <viewmodels:DownloadFromFTPWindowViewModel x:Key="DownloadFromFTPWindowViewModel"/>
         <viewmodels:ScheduledDownloadsWindowViewModel x:Key="ScheduledDownloadsWindowViewModel"/>
 
         <valueconverters:DownloadStateToTitleConverter_CancelBtn x:Key="DownloadStateToCancelButtonTitleConverter"/>
-        <valueconverters:ValueTypeToColorConverter x:Key="ValueTypeToColorConverter"/>
         <valueconverters:DownloadButtonToPauseResumeButtonTitle x:Key="DownloadStateToPauseResumeButtonTitleConverter"/>
         <valueconverters:DownloadsListToMainWindowTitleConverter x:Key="DownloadsListToMainWindowConverter"/>
     </Application.Resources>

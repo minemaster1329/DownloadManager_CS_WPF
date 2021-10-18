@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-using DownloadManager_CS_WPF.DebugInfoClasses;
 
 namespace DownloadManager_CS_WPF.DownloadClasses
 {
@@ -39,7 +38,8 @@ namespace DownloadManager_CS_WPF.DownloadClasses
                 _downloaded = 0;
                 CheckIfPausable().ContinueWith(async v => Pausable = await v).Wait();
                 StartDownload();
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "retrying download"));
+                CustomLoggerSingleton.Instance.AddNewLog("Internet Download", $"Retrying download from {DownloadSource}", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "retrying download"));
             }
 
             else if (State == DownloadState.DownloadStarted || State == DownloadState.DownloadPaused)
@@ -49,7 +49,8 @@ namespace DownloadManager_CS_WPF.DownloadClasses
                 Pausable = false;
                 Progress = 0;
                 _httpClient.DefaultRequestHeaders.Remove("Range");
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download cancelled"));
+                CustomLoggerSingleton.Instance.AddNewLog("Internet Download", $"Download from {DownloadSource} has been cancelled", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download cancelled"));
             }
         }
 
@@ -68,7 +69,11 @@ namespace DownloadManager_CS_WPF.DownloadClasses
                 if (_downloadSize > 0)
                 {
                     State = DownloadState.DownloadStarted;
-                    if (!Pausable) AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugWarning($"Download {DownloadID}", "this download cannot be paused"));
+                    if (!Pausable)
+                    {
+                        CustomLoggerSingleton.Instance.AddNewLog("Download from Internet", $"Download from {DownloadSource} cannot be paused", LogType.Warning);
+                        //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugWarning($"Download {DownloadID}", "this download cannot be paused"));
+                    }
                     await StartDownload();
                 }
                 else State = DownloadState.DownloadError;
@@ -76,7 +81,8 @@ namespace DownloadManager_CS_WPF.DownloadClasses
             catch (Exception e)
             {
                 State = DownloadState.DownloadError;
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError($"Error when download {DownloadID}", e.Message));
+                CustomLoggerSingleton.Instance.AddNewLog($"Error when downloading from {DownloadSource}", e.Message, LogType.Error);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError($"Error when download {DownloadID}", e.Message));
             }
         }
 
@@ -86,12 +92,14 @@ namespace DownloadManager_CS_WPF.DownloadClasses
             {
                 State = DownloadState.DownloadStarted;
                 StartDownload();
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download resumed"));
+                CustomLoggerSingleton.Instance.AddNewLog("Download from Internet", $"Download from {DownloadSource} has been resumed", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download resumed"));
             }
             else if (State == DownloadState.DownloadStarted && Pausable)
             {
                 State = DownloadState.DownloadPaused;
-                AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download paused"));
+                CustomLoggerSingleton.Instance.AddNewLog("Download from Internet", $"Download from {DownloadSource} has been paused", LogType.Info);
+                //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugInfo($"Download {DownloadID}", "download paused"));
             }
         }
 
@@ -107,7 +115,9 @@ namespace DownloadManager_CS_WPF.DownloadClasses
             }
             catch (Exception e)
             {
-                AppSingleton.Instance.SynchroCotext.Send(x => AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when trying to download", e.Message)), null);               
+
+                //AppSingleton.Instance.SynchroCotext.Send(x => AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugError("Error when trying to download", e.Message)), null);               
+                AppSingleton.Instance.SynchroCotext.Send(x => CustomLoggerSingleton.Instance.AddNewLog($"Error when downloading from {source}", e.Message, LogType.Error), null);               
                 return false;
             }
         }
@@ -152,7 +162,8 @@ namespace DownloadManager_CS_WPF.DownloadClasses
                 if (_downloaded == _downloadSize)
                 {
                     State = DownloadState.DownloadCompleted;
-                    AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugDownloadCompletedSuccesfully($"Download {DownloadID}", "download completed successfully"));
+                    //AppSingleton.Instance.Logs.Add(DebugFactory.GetDebugDownloadCompletedSuccesfully($"Download {DownloadID}", "download completed successfully"));
+                    CustomLoggerSingleton.Instance.AddNewLog("Download from Internet", $"Download from {DownloadSource} completed successfully", LogType.Info);
                 }
                 else
                 {
